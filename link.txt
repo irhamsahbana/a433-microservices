@@ -1,17 +1,1 @@
-# Link GitHub Packages (GitHub Container Registry) untuk Container Image
-
-GitHub Container Registry URL:
-https://github.com/irhamsahbana?tab=packages
-
-Image Details:
-- Repository: ghcr.io/irhamsahbana/item-app
-- Tag: v1
-- Full Image Name: ghcr.io/irhamsahbana/item-app:v1
-- Visibility: Public
-
-Pull Command:
-docker pull ghcr.io/irhamsahbana/item-app:v1
-
-Catatan:
-- Repository GitHub Packages sudah bersifat public, dapat diakses tanpa login
-- Image dibuat menggunakan Dockerfile yang ada di root project
+https://github.com/users/irhamsahbana/packages/container/package/item-app
