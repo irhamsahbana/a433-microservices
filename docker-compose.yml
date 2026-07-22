@@ -1,0 +1,54 @@
+# Kriteria 4: Docker Compose untuk menjalankan containerized application
+# Menggunakan Docker Compose versi 3.8 (versi 2 atau lebih sesuai kriteria)
+services:
+  # Service untuk item-app
+  item-app:
+    # Saran 4: Menggunakan image dari GitHub Packages (GHCR) alih-alih Docker Hub
+    # Ganti 'irhamsahbana' dengan username GitHub Anda
+    image: ghcr.io/irhamsahbana/item-app:v1
+
+    # Melakukan port mapping agar dapat diakses dari port 80 di host
+    # Port 8080 di container dipetakan ke port 80 di host
+    ports:
+      - "80:8080"
+
+    # Pastikan item-app hanya berjalan setelah item-db diluncurkan (sesuai kriteria)
+    depends_on:
+      - item-db
+
+    # Saran untuk nilai lebih baik: restart policy agar container selalu restart ketika terhenti
+    restart: unless-stopped
+
+    # Environment variables untuk koneksi database
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=item-db
+
+    # Network untuk komunikasi antar container
+    networks:
+      - app-network
+
+  # Service untuk item-db (MongoDB)
+  item-db:
+    # Menggunakan image mongo:3 dari Docker Hub (sesuai kriteria)
+    image: mongo:3
+
+    # Memakai volume bernama app-db dengan target /data/db di container (sesuai kriteria)
+    volumes:
+      - app-db:/data/db
+
+    # Saran untuk nilai lebih baik: restart policy
+    restart: unless-stopped
+
+    # Network untuk komunikasi antar container
+    networks:
+      - app-network
+
+# Mendefinisikan volume bernama app-db (sesuai kriteria)
+volumes:
+  app-db:
+
+# Mendefinisikan network untuk komunikasi antar container
+networks:
+  app-network:
+    driver: bridge
