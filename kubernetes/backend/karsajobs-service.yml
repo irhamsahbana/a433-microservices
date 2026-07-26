@@ -1,5 +1,5 @@
-# Exposed via a fixed NodePort so the frontend's VUE_APP_BACKEND can point
-# at a predictable <Node_IP>:<Node_Port> instead of a randomly assigned one.
+# Di-expose lewat NodePort tetap supaya VUE_APP_BACKEND di frontend bisa
+# nunjuk ke <Node_IP>:<Node_Port> yang pasti, bukan port acak.
 apiVersion: v1
 kind: Service
 metadata:

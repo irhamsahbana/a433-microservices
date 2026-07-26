@@ -1,5 +1,5 @@
-# StatefulSet gives Mongo a stable identity, backed by the PV/PVC defined
-# in mongo-pv-pvc.yml.
+# StatefulSet bikin Mongo punya identitas yang stabil, didukung PV/PVC yang
+# udah didefinisikan di mongo-pv-pvc.yml.
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -19,15 +19,15 @@ spec:
       containers:
         - name: mongo
           image: mongo:4.4
-          # Pass the config via args only (no `command` override) so the
-          # image's docker-entrypoint.sh still runs — it's what actually
-          # creates the root user from the *_FILE env vars below.
+          # Config di-pass lewat args aja (tanpa override `command`) biar
+          # docker-entrypoint.sh bawaan image-nya tetap jalan — itu yang
+          # sebenarnya bikin root user dari env var *_FILE di bawah ini.
           args: ["--config", "/config/mongo.conf"]
           ports:
             - containerPort: 27017
           env:
-            # Root credentials are read from files, not plain env vars,
-            # so the actual secret values never show up in `kubectl describe`.
+            # Kredensial root dibaca dari file, bukan env var biasa, jadi
+            # nilai secret aslinya nggak bakal kelihatan di `kubectl describe`.
             - name: MONGO_INITDB_ROOT_USERNAME_FILE
               value: /etc/mongo-credentials/MONGO_ROOT_USERNAME
             - name: MONGO_INITDB_ROOT_PASSWORD_FILE

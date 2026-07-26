@@ -1,5 +1,6 @@
-# Backend API deployment. Reads Mongo connection details from the same
-# mongo-secret used by the StatefulSet, so credentials only live in one place.
+# Deployment buat API backend. Ambil detail koneksi Mongo dari mongo-secret
+# yang sama dengan yang dipakai StatefulSet, jadi kredensial cuma ada di
+# satu tempat.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -34,7 +35,7 @@ spec:
             - name: APP_PORT
               value: "8080"
             - name: MONGO_HOST
-              # DNS name of the mongo Service defined in mongo-service.yml
+              # Nama DNS dari Service mongo yang didefinisikan di mongo-service.yml
               value: mongo
             - name: MONGO_USER
               valueFrom:

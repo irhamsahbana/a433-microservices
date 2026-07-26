@@ -1,5 +1,5 @@
-# Fixed NodePort so the app is reachable at a predictable <Node_IP>:30000
-# from the browser.
+# NodePort tetap supaya app-nya bisa diakses dari browser lewat
+# <Node_IP>:30000 yang pasti.
 apiVersion: v1
 kind: Service
 metadata:

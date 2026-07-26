@@ -1,5 +1,6 @@
-# Frontend deployment. VUE_APP_BACKEND is baked into the image at build time
-# (see build_push_image_karsajobs_ui.sh / .env), so no runtime env is needed.
+# Deployment buat frontend. VUE_APP_BACKEND udah ke-bake ke dalam image
+# pas build time (lihat build_push_image_karsajobs_ui.sh / .env), jadi
+# gak perlu env var lagi pas runtime.
 apiVersion: apps/v1
 kind: Deployment
 metadata:

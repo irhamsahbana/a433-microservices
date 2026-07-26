@@ -1,6 +1,6 @@
-# Manually provisioned PersistentVolume (backed by hostPath on the minikube
-# node) and the PersistentVolumeClaim the StatefulSet binds to, mounted at
-# /data/db so Mongo's data survives pod restarts.
+# PersistentVolume yang dibuat manual (pakai hostPath di node minikube) dan
+# PersistentVolumeClaim yang di-bind oleh StatefulSet, di-mount ke /data/db
+# supaya data Mongo tetap ada meskipun pod restart.
 apiVersion: v1
 kind: PersistentVolume
 metadata:
