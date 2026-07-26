@@ -1,0 +1,17 @@
+# Exposed via a fixed NodePort so the frontend's VUE_APP_BACKEND can point
+# at a predictable <Node_IP>:<Node_Port> instead of a randomly assigned one.
+apiVersion: v1
+kind: Service
+metadata:
+  name: karsajobs
+  namespace: karsajobs
+  labels:
+    app: karsajobs
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+      targetPort: 8080
+      nodePort: 30080
+  selector:
+    app: karsajobs

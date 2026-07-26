@@ -1,0 +1,6 @@
+# Dedicated namespace so all Karsa Jobs objects (frontend, backend, database)
+# are grouped together and easy to tear down as a unit.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: karsajobs

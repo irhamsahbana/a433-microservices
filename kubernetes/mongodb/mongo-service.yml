@@ -1,0 +1,15 @@
+# ClusterIP service so the backend can reach Mongo at the stable DNS name
+# "mongo" (used directly as MONGO_HOST by the karsajobs API).
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo
+  namespace: karsajobs
+  labels:
+    app: mongo
+spec:
+  ports:
+    - port: 27017
+      targetPort: 27017
+  selector:
+    app: mongo

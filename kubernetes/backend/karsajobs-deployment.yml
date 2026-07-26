@@ -1,0 +1,53 @@
+# Backend API deployment. Reads Mongo connection details from the same
+# mongo-secret used by the StatefulSet, so credentials only live in one place.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: karsajobs
+  namespace: karsajobs
+  labels:
+    app: karsajobs
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: karsajobs
+  template:
+    metadata:
+      labels:
+        app: karsajobs
+    spec:
+      containers:
+        - name: karsajobs
+          image: ghcr.io/irhamsahbana/karsajobs:latest
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 128Mi
+          ports:
+            - containerPort: 8080
+          env:
+            - name: APP_PORT
+              value: "8080"
+            - name: MONGO_HOST
+              # DNS name of the mongo Service defined in mongo-service.yml
+              value: mongo
+            - name: MONGO_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: MONGO_ROOT_USERNAME
+            - name: MONGO_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: MONGO_ROOT_PASSWORD
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5

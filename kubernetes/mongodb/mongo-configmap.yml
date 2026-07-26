@@ -1,0 +1,16 @@
+# Provides mongod its config file. Mounted at /config in the StatefulSet;
+# mongod is started with --config pointing at this file's dbPath.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongo-configmap
+  namespace: karsajobs
+data:
+  mongo.conf: |
+    storage:
+      dbPath: /data/db
+    net:
+      # Running mongod directly (not via the image's entrypoint script) skips
+      # its default bind_ip_all, so it must be set explicitly or the backend
+      # can't reach Mongo across the cluster network.
+      bindIp: 0.0.0.0

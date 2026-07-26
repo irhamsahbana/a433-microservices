@@ -1,0 +1,17 @@
+# Fixed NodePort so the app is reachable at a predictable <Node_IP>:30000
+# from the browser.
+apiVersion: v1
+kind: Service
+metadata:
+  name: karsajobs-ui
+  namespace: karsajobs
+  labels:
+    app: karsajobs-ui
+spec:
+  type: NodePort
+  ports:
+    - port: 8000
+      targetPort: 8000
+      nodePort: 30000
+  selector:
+    app: karsajobs-ui

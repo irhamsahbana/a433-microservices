@@ -1,0 +1,32 @@
+# Frontend deployment. VUE_APP_BACKEND is baked into the image at build time
+# (see build_push_image_karsajobs_ui.sh / .env), so no runtime env is needed.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: karsajobs-ui
+  namespace: karsajobs
+  labels:
+    app: karsajobs-ui
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: karsajobs-ui
+  template:
+    metadata:
+      labels:
+        app: karsajobs-ui
+    spec:
+      containers:
+        - name: karsajobs-ui
+          image: ghcr.io/irhamsahbana/karsajobs-ui:latest
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 500m
+              memory: 768Mi
+          ports:
+            - containerPort: 8000
