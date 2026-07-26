@@ -1,7 +1,7 @@
 version: 2.1
 
 jobs:
-  # Installs hadolint and lints the Dockerfile for best-practice issues
+  # Install hadolint terus jalanin buat cek Dockerfile-nya sesuai best practice
   lint-dockerfile:
     docker:
       - image: cimg/base:2024.02
@@ -16,7 +16,7 @@ jobs:
           name: Lint Dockerfile
           command: /tmp/hadolint Dockerfile
 
-  # Builds the frontend image and pushes it to GHCR via the shell script
+  # Build image frontend terus push ke GHCR lewat shell script
   build-app-karsajobs-ui:
     docker:
       - image: cimg/base:2024.02
