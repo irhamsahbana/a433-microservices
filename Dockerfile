@@ -1,7 +1,9 @@
-# Image dasar Node.js versi 18, varian alpine biar ukurannya kecil
-FROM node:18-alpine
+# ===== Stage 1: builder =====
+# Stage terpisah cuma buat install dependency; hasil akhirnya (node_modules)
+# nanti di-copy ke stage runtime, jadi build cache/tools di stage ini gak
+# ikut kebawa ke image final.
+FROM node:18-alpine AS builder
 
-# Direktori kerja di dalam container tempat semua file app diletakkan
 WORKDIR /app
 
 # Copy package.json dan package-lock.json duluan (sebelum source code lain)
@@ -12,7 +14,17 @@ COPY package*.json ./
 # (nodemon) karena di production gak perlu auto-restart
 RUN npm ci --omit=dev
 
-# Copy sisa source code (index.js, dst) ke dalam container
+# ===== Stage 2: runtime =====
+# Mulai dari base image yang bersih lagi, jadi image final cuma berisi
+# node_modules hasil install + source code, gak ada sisa apa pun dari stage builder
+FROM node:18-alpine AS runtime
+
+WORKDIR /app
+
+# Ambil node_modules yang udah di-install dari stage builder
+COPY --from=builder /app/node_modules ./node_modules
+
+# Copy source code (index.js, dst) ke dalam image final
 COPY . .
 
 # Dokumentasi bahwa container ini listen di port 3000 (sesuai .env PORT)
