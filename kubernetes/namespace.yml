@@ -1,0 +1,10 @@
+# Namespace khusus buat semua object E-Commerce App (RabbitMQ, order-service,
+# shipping-service) supaya terkumpul jadi satu dan gampang dikelola.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ecommerce
+  labels:
+    # Label ini yang bikin Istio otomatis nyuntik sidecar Envoy ke tiap pod
+    # yang jalan di namespace ini.
+    istio-injection: enabled

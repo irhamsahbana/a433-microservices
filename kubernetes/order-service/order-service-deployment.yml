@@ -1,0 +1,39 @@
+# Deployment buat order-service. Image-nya diambil dari GHCR (bukan
+# image lokal), sesuai kriteria 3.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-service
+  namespace: ecommerce
+  labels:
+    app: order-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: order-service
+  template:
+    metadata:
+      labels:
+        app: order-service
+    spec:
+      containers:
+        - name: order-service
+          image: ghcr.io/irhamsahbana/order-service:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+          env:
+            # Port HTTP server order-service, sama dengan default di .env
+            - name: PORT
+              value: "3000"
+            # URL RabbitMQ, nunjuk ke Service "rabbitmq" di namespace yang sama
+            - name: AMQP_URL
+              value: "amqp://rabbitmq:5672"
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 128Mi

@@ -1,0 +1,19 @@
+# Istio Gateway: buka port 80 di Istio Ingress Gateway buat nerima trafik
+# HTTP dari luar cluster.
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: ecommerce-gateway
+  namespace: ecommerce
+spec:
+  selector:
+    # Pakai Ingress Gateway bawaan Istio (istio-ingressgateway)
+    istio: ingressgateway
+  servers:
+    - port:
+        number: 80
+        name: http
+        protocol: HTTP
+      hosts:
+        # "*" artinya terima request dari hostname apa aja
+        - "*"

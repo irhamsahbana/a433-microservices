@@ -1,0 +1,39 @@
+# Deployment buat shipping-service. Image-nya diambil dari GHCR (bukan
+# image lokal), sesuai kriteria 3.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shipping-service
+  namespace: ecommerce
+  labels:
+    app: shipping-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shipping-service
+  template:
+    metadata:
+      labels:
+        app: shipping-service
+    spec:
+      containers:
+        - name: shipping-service
+          image: ghcr.io/irhamsahbana/shipping-service:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3001
+          env:
+            # Port HTTP server shipping-service, sama dengan default di .env
+            - name: PORT
+              value: "3001"
+            # URL RabbitMQ, nunjuk ke Service "rabbitmq" di namespace yang sama
+            - name: AMQP_URL
+              value: "amqp://rabbitmq:5672"
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 128Mi

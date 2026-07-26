@@ -1,0 +1,21 @@
+# Service ClusterIP buat RabbitMQ, dipakai order-service & shipping-service
+# lewat DNS name "rabbitmq".
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq
+  namespace: ecommerce
+  labels:
+    app: rabbitmq
+spec:
+  ports:
+    # Port AMQP, dipakai order-service & shipping-service buat kirim/terima pesan
+    - name: amqp
+      port: 5672
+      targetPort: 5672
+    # Port dashboard management RabbitMQ (opsional, buat monitoring lewat browser)
+    - name: management
+      port: 15672
+      targetPort: 15672
+  selector:
+    app: rabbitmq
