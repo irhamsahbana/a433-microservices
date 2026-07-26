@@ -1,7 +1,7 @@
 version: 2.1
 
 jobs:
-  # Installs hadolint and lints the Dockerfile for best-practice issues
+  # Install hadolint terus jalanin buat cek Dockerfile-nya sesuai best practice
   lint-dockerfile:
     docker:
       - image: cimg/base:2024.02
@@ -16,7 +16,7 @@ jobs:
           name: Lint Dockerfile
           command: /tmp/hadolint Dockerfile
 
-  # Runs the backend unit tests, matching the go.mod toolchain version
+  # Jalanin unit test backend, versi image disamain dengan toolchain di go.mod
   test-app:
     docker:
       - image: golang:1.15
@@ -26,7 +26,7 @@ jobs:
           name: Run unit tests
           command: go test -v -short --count=1 $(go list ./...)
 
-  # Builds the backend image and pushes it to GHCR via the shell script
+  # Build image backend terus push ke GHCR lewat shell script
   build-app-karsajobs:
     docker:
       - image: cimg/base:2024.02

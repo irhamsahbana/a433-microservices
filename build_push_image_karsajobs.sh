@@ -1,23 +1,23 @@
 #!/bin/bash
-# Builds the karsajobs (backend) Docker image and pushes it to GitHub
+# Build image Docker karsajobs (backend) dan push ke GitHub
 # Container Registry (GHCR).
 #
-# Required environment variables:
-#   GHCR_USERNAME - GitHub username that owns the token
-#   GHCR_TOKEN    - GitHub PAT with the write:packages scope
+# Environment variable yang dibutuhkan:
+#   GHCR_USERNAME - username GitHub pemilik token
+#   GHCR_TOKEN    - GitHub PAT dengan scope write:packages
 #
-# Usage: ./build_push_image_karsajobs.sh [tag]
+# Cara pakai: ./build_push_image_karsajobs.sh [tag]
 
 set -euo pipefail
 
 IMAGE="ghcr.io/irhamsahbana/karsajobs"
 TAG="${1:-latest}"
 
-# Log in to GHCR using the PAT (kept out of shell history via env var)
+# Login ke GHCR pakai PAT (disimpan di env var, gak muncul di shell history)
 echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USERNAME" --password-stdin
 
-# Build the image from the Dockerfile in the current directory
+# Build image dari Dockerfile di direktori ini
 docker build -t "$IMAGE:$TAG" .
 
-# Push the built image to the registry
+# Push image yang udah dibuild ke registry
 docker push "$IMAGE:$TAG"
