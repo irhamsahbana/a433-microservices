@@ -1,0 +1,27 @@
+# Values buat Helm chart bitnami/rabbitmq.
+# Diinstall dengan: helm install rabbitmq bitnami/rabbitmq \
+#                     --namespace ecommerce -f values.yaml
+
+auth:
+  # order-service & shipping-service konek tanpa kredensial di AMQP_URL-nya
+  # (amqplib otomatis pakai default "guest"/"guest" kalau gak di-set),
+  # jadi user RabbitMQ-nya disamain jadi guest/guest biar nyambung.
+  username: guest
+  password: guest
+
+image:
+  # Per Agustus 2025, tag terbaru bitnami/rabbitmq dipindah ke belakang
+  # subscription berbayar. "bitnamilegacy" adalah registry cadangan gratis
+  # Bitnami buat versi image dari sebelum perubahan itu.
+  repository: bitnamilegacy/rabbitmq
+  # Chart defaultnya RabbitMQ 4.x, yang menaikkan batas minimum AMQP
+  # frame_max jadi 8192 -- tapi amqplib versi lama yang dipakai order-service
+  # & shipping-service (0.6.0) cuma nego 4096, jadi ditolak. Dipin ke 3.11
+  # (versi yang juga disaranin di kriteria) biar kompatibel.
+  tag: 3.11.28-debian-11-r0
+
+global:
+  security:
+    # Chart-nya nolak image non-standar secara default; ini diperlukan
+    # supaya boleh pakai image dari registry bitnamilegacy di atas.
+    allowInsecureImages: true
