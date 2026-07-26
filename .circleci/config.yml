@@ -1,0 +1,45 @@
+version: 2.1
+
+jobs:
+  # Installs hadolint and lints the Dockerfile for best-practice issues
+  lint-dockerfile:
+    docker:
+      - image: cimg/base:2024.02
+    steps:
+      - checkout
+      - run:
+          name: Install hadolint
+          command: |
+            wget -O /tmp/hadolint https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64
+            chmod +x /tmp/hadolint
+      - run:
+          name: Lint Dockerfile
+          command: /tmp/hadolint Dockerfile
+
+  # Builds the frontend image and pushes it to GHCR via the shell script
+  build-app-karsajobs-ui:
+    docker:
+      - image: cimg/base:2024.02
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: default
+      - run:
+          name: Build and push image
+          command: |
+            chmod +x build_push_image_karsajobs_ui.sh
+            ./build_push_image_karsajobs_ui.sh "$CIRCLE_SHA1"
+
+workflows:
+  karsajobs-ui-pipeline:
+    jobs:
+      - lint-dockerfile:
+          filters:
+            branches:
+              only: karsajobs-ui
+      - build-app-karsajobs-ui:
+          requires:
+            - lint-dockerfile
+          filters:
+            branches:
+              only: karsajobs-ui
