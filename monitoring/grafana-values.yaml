@@ -1,0 +1,50 @@
+# Values buat Helm chart grafana/grafana.
+# Diinstall dengan: helm install grafana grafana/grafana \
+#                     --namespace monitoring -f grafana-values.yaml
+
+adminUser: admin
+adminPassword: admin123
+
+# Gak perlu PersistentVolume buat setup demo lokal/minikube ini.
+persistence:
+  enabled: false
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+  limits:
+    cpu: 250m
+    memory: 256Mi
+
+# Otomatis nyambungin Prometheus server (yang diinstall di namespace yang
+# sama) jadi datasource default Grafana — gak perlu setup manual lewat UI.
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+      - name: Prometheus
+        type: prometheus
+        url: http://prometheus-server.monitoring.svc.cluster.local
+        access: proxy
+        isDefault: true
+
+dashboardProviders:
+  dashboardproviders.yaml:
+    apiVersion: 1
+    providers:
+      - name: default
+        orgId: 1
+        folder: ""
+        type: file
+        options:
+          path: /var/lib/grafana/dashboards/default
+
+# Otomatis ambil dashboard "Kubernetes cluster monitoring (via Prometheus)"
+# dari grafana.com/dashboards/6417 pas install.
+dashboards:
+  default:
+    k8s-cluster:
+      gnetId: 6417
+      revision: 1
+      datasource: Prometheus

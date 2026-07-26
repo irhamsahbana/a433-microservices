@@ -1,0 +1,23 @@
+# Values buat Helm chart prometheus-community/prometheus.
+# Diinstall dengan: helm install prometheus prometheus-community/prometheus \
+#                     --namespace monitoring -f prometheus-values.yaml
+
+# Gak perlu buat setup lokal/minikube ini; bikin chart-nya lebih ringan.
+alertmanager:
+  enabled: false
+
+prometheus-pushgateway:
+  enabled: true
+
+server:
+  # Gak perlu PersistentVolume di cluster demo ini; metric-nya gak perlu
+  # tetap ada kalau pod-nya restart.
+  persistentVolume:
+    enabled: false
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
