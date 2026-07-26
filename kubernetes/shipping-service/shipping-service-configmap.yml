@@ -1,0 +1,10 @@
+# Konfigurasi non-sensitif shipping-service. Kredensial RabbitMQ (AMQP_URL)
+# dipisah ke shipping-service-secret.yml karena isinya ada password.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shipping-service-config
+  namespace: ecommerce
+data:
+  # Port HTTP server shipping-service, sama dengan default di .env
+  PORT: "3001"

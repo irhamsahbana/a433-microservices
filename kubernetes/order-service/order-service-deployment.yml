@@ -19,17 +19,18 @@ spec:
     spec:
       containers:
         - name: order-service
-          image: ghcr.io/irhamsahbana/order-service:latest
+          # Tag versi spesifik (bukan "latest") biar image immutable dan
+          # gampang di-rollback ke versi tertentu kalau ada masalah
+          image: ghcr.io/irhamsahbana/order-service:v1.0.1
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
-          env:
-            # Port HTTP server order-service, sama dengan default di .env
-            - name: PORT
-              value: "3000"
-            # URL RabbitMQ, nunjuk ke Service "rabbitmq" di namespace yang sama
-            - name: AMQP_URL
-              value: "amqp://rabbitmq:5672"
+          # PORT (non-sensitif) dari ConfigMap, AMQP_URL (ada password) dari Secret
+          envFrom:
+            - configMapRef:
+                name: order-service-config
+            - secretRef:
+                name: order-service-secret
           resources:
             requests:
               cpu: 50m
@@ -37,3 +38,17 @@ spec:
             limits:
               cpu: 250m
               memory: 128Mi
+          # Restart pod otomatis kalau proses Node-nya macet/gak respons lagi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          # Baru dikasih trafik kalau koneksi RabbitMQ-nya udah kebentuk
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 5

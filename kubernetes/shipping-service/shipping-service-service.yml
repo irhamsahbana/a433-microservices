@@ -1,0 +1,15 @@
+# Service ClusterIP buat shipping-service, dibutuhkan sebagai destination
+# host di Istio VirtualService (kubernetes/istio/virtualservice.yml).
+apiVersion: v1
+kind: Service
+metadata:
+  name: shipping-service
+  namespace: ecommerce
+  labels:
+    app: shipping-service
+spec:
+  ports:
+    - port: 3001
+      targetPort: 3001
+  selector:
+    app: shipping-service

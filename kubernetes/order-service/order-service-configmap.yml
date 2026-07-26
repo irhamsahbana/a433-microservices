@@ -1,0 +1,10 @@
+# Konfigurasi non-sensitif order-service. Kredensial RabbitMQ (AMQP_URL)
+# dipisah ke order-service-secret.yml karena isinya ada password.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: order-service-config
+  namespace: ecommerce
+data:
+  # Port HTTP server order-service, sama dengan default di .env
+  PORT: "3000"
