@@ -1,0 +1,6 @@
+# Namespace khusus supaya semua object Karsa Jobs (frontend, backend,
+# database) terkumpul jadi satu dan gampang dihapus sekaligus.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: karsajobs

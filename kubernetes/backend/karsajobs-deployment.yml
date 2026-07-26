@@ -1,0 +1,54 @@
+# Deployment buat API backend. Ambil detail koneksi Mongo dari mongo-secret
+# yang sama dengan yang dipakai StatefulSet, jadi kredensial cuma ada di
+# satu tempat.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: karsajobs
+  namespace: karsajobs
+  labels:
+    app: karsajobs
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: karsajobs
+  template:
+    metadata:
+      labels:
+        app: karsajobs
+    spec:
+      containers:
+        - name: karsajobs
+          image: ghcr.io/irhamsahbana/karsajobs:latest
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 128Mi
+          ports:
+            - containerPort: 8080
+          env:
+            - name: APP_PORT
+              value: "8080"
+            - name: MONGO_HOST
+              # Nama DNS dari Service mongo yang didefinisikan di mongo-service.yml
+              value: mongo
+            - name: MONGO_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: MONGO_ROOT_USERNAME
+            - name: MONGO_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: MONGO_ROOT_PASSWORD
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
